@@ -10,6 +10,11 @@
   height: 100vh;
 }
 
+.expense-tracker-body-dark-mode {
+  background: #333;
+  color: #fff;
+}
+
 /* Main Tracker Container */
 .expense-tracker {
   width: 90%;
@@ -22,11 +27,33 @@
   text-align: center;
 }
 
-/* Title */
-h1 {
-  font-size: 1.8rem;
+.header {
+  position: relative;
+  padding: 10px;
+  text-align: center; /* Center the h1 element */
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.8em;
   color: #4285f4;
-  margin-bottom: 1rem;
+}
+
+.dark-mode-button {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.dark-mode-button:hover {
+  background-color: #555;
 }
 
 /* Balance Display */

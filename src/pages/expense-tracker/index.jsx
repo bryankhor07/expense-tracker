@@ -20,7 +20,7 @@ export const ExpenseTracker = () => {
   const [description, setDescription] = useState("");
   const [transactionAmount, setTransactionAmount] = useState(0);
   const [transactionType, setTransactionType] = useState("expense");
-
+  const [darkMode, setDarkMode] = useState(false);
   const { balance, income, expenses } = transactionTotal;
 
   const onSubmit = (e) => {
@@ -54,10 +54,24 @@ export const ExpenseTracker = () => {
   };
   return (
     <>
-      <div className="expense-tracker-body">
+      <div
+        className={
+          darkMode
+            ? "expense-tracker-body expense-tracker-body-dark-mode"
+            : "expense-tracker-body"
+        }
+      >
         <div className="expense-tracker">
           <div className="container">
-            <h1>{name}'s Expense Tracker</h1>
+            <div className="header">
+              <h1>{name}'s Expense Tracker</h1>
+              <button
+                className="dark-mode-button"
+                onClick={() => setDarkMode(!darkMode)}
+              >
+                {darkMode ? "Dark mode" : "Light mode"}
+              </button>
+            </div>
             <div className="balance">
               <h3>Your Balance</h3>
               {balance >= 0 ? <h2>${balance}</h2> : <h2>-${balance * -1}</h2>}
