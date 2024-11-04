@@ -39,9 +39,9 @@ export const useGetTransactions = () => {
           docs.push({ ...data, id });
 
           if (data.transactionType === "income") {
-            totalIncome += parseFloat(data.transactionAmount);
+            totalIncome += Number(data.transactionAmount);
           } else {
-            totalExpenses += parseFloat(data.transactionAmount);
+            totalExpenses += Number(data.transactionAmount);
           }
         });
         setTransactions(docs);

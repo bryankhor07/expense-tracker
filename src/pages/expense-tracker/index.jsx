@@ -81,11 +81,17 @@ export const ExpenseTracker = () => {
                 onChange={(e) => setDescription(e.target.value)}
               />
               <input
-                type="number"
+                type="text"
                 placeholder="Amount"
                 value={transactionAmount}
                 required
-                onChange={(e) => setTransactionAmount(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // Allow only numbers with up to two decimal places
+                  if (/^\d*\.?\d{0,2}$/.test(value)) {
+                    setTransactionAmount(value);
+                  }
+                }}
               />
               <div className="radio-buttons">
                 <label htmlFor="expense">Expense</label>
