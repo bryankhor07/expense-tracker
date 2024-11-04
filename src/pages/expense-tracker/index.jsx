@@ -2,6 +2,7 @@ import { useAddTransaction } from "../../hooks/useAddTransaction";
 import { useRemoveTransaction } from "../../hooks/useRemoveTransaction";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
+import { useRemoveAllTransaction } from "../../hooks/useRemoveAllTransaction";
 import { signOut } from "firebase/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +12,9 @@ import "./styles.css";
 export const ExpenseTracker = () => {
   const { addTransaction } = useAddTransaction();
   const { removeTransaction } = useRemoveTransaction();
+  const { removeAllTransaction } = useRemoveAllTransaction();
   const { transactions, transactionTotal } = useGetTransactions();
-  const { name, profilePhoto } = useGetUserInfo();
+  const { name, profilePhoto, userID } = useGetUserInfo();
   const navigate = useNavigate();
 
   const [description, setDescription] = useState("");
@@ -35,6 +37,10 @@ export const ExpenseTracker = () => {
 
   const deleteTransaction = (transactionId) => {
     removeTransaction(transactionId);
+  };
+
+  const deleteAllTransactions = (userID) => {
+    removeAllTransaction(userID);
   };
 
   const signUserOut = async () => {
@@ -148,6 +154,12 @@ export const ExpenseTracker = () => {
                 );
               })}
             </ul>
+            <button
+              className="delete-all-button"
+              onClick={() => deleteAllTransactions(userID)}
+            >
+              Delete All Transactions
+            </button>
           </div>
         </div>
       </div>

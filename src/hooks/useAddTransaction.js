@@ -8,7 +8,7 @@ import { db } from "../config/firebase-config";
 import { useGetUserInfo } from "./useGetUserInfo";
 
 export const useAddTransaction = () => {
-  const transactionCollectionRef = collection(db, "transactions");
+  const transactionCollectionRef = collection(db, "transactions"); // Reference to the transactions collection
   const { userID } = useGetUserInfo();
   const addTransaction = async ({
     description,

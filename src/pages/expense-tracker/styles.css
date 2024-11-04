@@ -200,3 +200,22 @@ h1 {
 .transaction-type {
   color: #888;
 }
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.delete-all-button {
+  margin: auto;
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+}
+
+.delete-all-button:hover {
+  background-color: #ff3336;
+}
