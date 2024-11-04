@@ -28,7 +28,7 @@ export const Auth = () => {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h1>Welcome Back!</h1>
+        <h1>Welcome!</h1>
         <p className="login-text">Sign in with Google to continue</p>
         <button className="login-button" onClick={signInWithGoogle}>
           <img src={GoogleIcon} alt="Google Icon" className="google-icon" />{" "}
