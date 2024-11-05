@@ -21,7 +21,51 @@ export const ExpenseTracker = () => {
   const [transactionAmount, setTransactionAmount] = useState(0);
   const [transactionType, setTransactionType] = useState("expense");
   const [darkMode, setDarkMode] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
   const { balance, income, expenses } = transactionTotal;
+
+  const applyDateFilter = () => {
+    // Logic to filter transactions based on startDate and endDate
+    const startDateArray = startDate.split("-").map(Number);
+    const endDateArray = endDate.split("-").map(Number);
+    transactions.forEach((transaction) => {
+      // Check if the transaction date is within the range
+      // If it is, add it to the filteredTransactions array
+      const transactionDate = new Date(
+        transaction.createdAt.seconds * 1000 +
+          transaction.createdAt.nanoseconds / 1000000
+      ).toLocaleDateString();
+
+      const transactionDateArray = transactionDate.split("/").map(Number);
+      if (
+        new Date(startDateArray[0], startDateArray[1] - 1, startDateArray[2]) <=
+          new Date(
+            transactionDateArray[2],
+            transactionDateArray[0] - 1,
+            transactionDateArray[1]
+          ) &&
+        new Date(
+          transactionDateArray[2],
+          transactionDateArray[0] - 1,
+          transactionDateArray[1]
+        ) <= new Date(endDateArray[0], endDateArray[1] - 1, endDateArray[2])
+      ) {
+        setFilteredTransactions((prevTransactions) => [
+          ...prevTransactions,
+          transaction,
+        ]);
+      }
+    });
+  };
+
+  const clearDateFilter = () => {
+    setStartDate("");
+    setEndDate("");
+    // Logic to reset the transaction list to show all items
+    setFilteredTransactions([]);
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -139,47 +183,120 @@ export const ExpenseTracker = () => {
             </div>
           )}
         </div>
-        <div className="transactions">
-          <h3>Transactions</h3>
-          <div className="transaction-list">
-            <ul>
-              {transactions.map((transaction, index) => {
-                const {
-                  description,
-                  transactionAmount,
-                  transactionType,
-                  transactionID,
-                } = transaction;
-                return (
-                  <li
-                    key={index}
-                    className={`transaction-item ${transactionType}`}
-                  >
-                    <div className="transaction-details">
-                      <h4>{description}</h4>
-                      <p>
-                        ${transactionAmount} •{" "}
-                        <span className="transaction-type">
-                          {transactionType}
-                        </span>
-                      </p>
-                    </div>
-                    <button
-                      className="delete-button"
-                      onClick={() => deleteTransaction(transactionID)}
+        <div className="filter-transaction-container">
+          <div className="filter">
+            <h3>Filter by Date</h3>
+            <div className="filter-by-date">
+              <label>
+                Start Date:
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </label>
+              <label>
+                End Date:
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </label>
+              <button onClick={applyDateFilter}>Apply Filter</button>
+              <button onClick={clearDateFilter}>Clear Filter</button>
+            </div>
+            <div className="transaction-list">
+              <ul>
+                {filteredTransactions.map((transaction, index) => {
+                  const {
+                    description,
+                    transactionAmount,
+                    transactionType,
+                    transactionID,
+                    createdAt,
+                  } = transaction;
+                  return (
+                    <li
+                      key={index}
+                      className={`transaction-item ${transactionType}`}
                     >
-                      Delete
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-            <button
-              className="delete-all-button"
-              onClick={() => deleteAllTransactions(userID)}
-            >
-              Delete All Transactions
-            </button>
+                      <div className="transaction-details">
+                        <h4>{description}</h4>
+                        <p>
+                          ${transactionAmount} •{" "}
+                          <span className="transaction-type">
+                            {transactionType}
+                          </span>
+                        </p>
+                        <p className="transaction-date">
+                          {new Date(
+                            createdAt.seconds * 1000 +
+                              createdAt.nanoseconds / 1000000
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <button
+                        className="delete-button"
+                        onClick={() => deleteTransaction(transactionID)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
+          <div className="transactions">
+            <h3>Transactions</h3>
+            <div className="transaction-list">
+              <ul>
+                {transactions.map((transaction, index) => {
+                  const {
+                    description,
+                    transactionAmount,
+                    transactionType,
+                    transactionID,
+                    createdAt,
+                  } = transaction;
+                  return (
+                    <li
+                      key={index}
+                      className={`transaction-item ${transactionType}`}
+                    >
+                      <div className="transaction-details">
+                        <h4>{description}</h4>
+                        <p>
+                          ${transactionAmount} •{" "}
+                          <span className="transaction-type">
+                            {transactionType}
+                          </span>
+                        </p>
+                        <p className="transaction-date">
+                          {new Date(
+                            createdAt.seconds * 1000 +
+                              createdAt.nanoseconds / 1000000
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <button
+                        className="delete-button"
+                        onClick={() => deleteTransaction(transactionID)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+              <button
+                className="delete-all-button"
+                onClick={() => deleteAllTransactions(userID)}
+              >
+                Delete All Transactions
+              </button>
+            </div>
           </div>
         </div>
       </div>
