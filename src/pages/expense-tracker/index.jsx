@@ -96,6 +96,10 @@ export const ExpenseTracker = () => {
       console.error("Error signing out: ", error);
     }
   };
+
+  const redirectToUserFeedback = () => {
+    navigate("/user-feedback");
+  };
   return (
     <>
       <div
@@ -171,6 +175,12 @@ export const ExpenseTracker = () => {
               </div>
               <button type="submit" className="submit-button">
                 Add Transaction
+              </button>
+              <button
+                onClick={redirectToUserFeedback}
+                className="user-feedback-link"
+              >
+                Have ideas to make this app even better? Share them here!
               </button>
             </form>
           </div>
@@ -274,10 +284,12 @@ export const ExpenseTracker = () => {
                           </span>
                         </p>
                         <p className="transaction-date">
-                          {new Date(
-                            createdAt.seconds * 1000 +
-                              createdAt.nanoseconds / 1000000
-                          ).toLocaleDateString()}
+                          {createdAt
+                            ? new Date(
+                                createdAt.seconds * 1000 +
+                                  createdAt.nanoseconds / 1000000
+                              ).toLocaleDateString()
+                            : "Loading..."}
                         </p>
                       </div>
                       <button

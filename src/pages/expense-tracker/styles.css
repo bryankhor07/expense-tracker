@@ -131,6 +131,24 @@
   background-color: #357ae8;
 }
 
+.user-feedback-link {
+  display: block;
+  margin: 15px auto;
+  color: #4285f4;
+  font-size: 0.9rem;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: color 0.3s ease;
+}
+
+.user-feedback-link:hover {
+  color: #357ae8;
+  text-decoration: underline;
+}
+
 /* Profile Section */
 .profile {
   display: flex;
