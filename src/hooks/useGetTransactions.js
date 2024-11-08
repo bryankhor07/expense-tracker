@@ -20,7 +20,7 @@ export const useGetTransactions = () => {
   const transactionCollectionRef = collection(db, "transactions");
   const { userID } = useGetUserInfo();
 
-  const getTransactions = async () => {
+  useEffect(() => {
     let unsubscribe;
     try {
       const queryTransactions = query(
@@ -56,11 +56,9 @@ export const useGetTransactions = () => {
       console.error("Error fetching transactions: ", error);
     }
 
-    return () => unsubscribe();
-  };
+    // Cleanup function to unsubscribe on unmount
+    return () => unsubscribe && unsubscribe();
+  }, [userID]);
 
-  useEffect(() => {
-    getTransactions();
-  }, []);
   return { transactions, transactionTotal }; // Return the transactions and transactionTotal state
 };

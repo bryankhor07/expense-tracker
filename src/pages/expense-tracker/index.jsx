@@ -3,8 +3,10 @@ import { useRemoveTransaction } from "../../hooks/useRemoveTransaction";
 import { useGetTransactions } from "../../hooks/useGetTransactions";
 import { useGetUserInfo } from "../../hooks/useGetUserInfo";
 import { useRemoveAllTransaction } from "../../hooks/useRemoveAllTransaction";
+import { useAddBudget } from "../../hooks/useAddBudget";
+import { useGetBudget } from "../../hooks/useGetBudget";
 import { signOut } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase-config";
 import "./styles.css";
@@ -13,7 +15,9 @@ export const ExpenseTracker = () => {
   const { addTransaction } = useAddTransaction();
   const { removeTransaction } = useRemoveTransaction();
   const { removeAllTransaction } = useRemoveAllTransaction();
+  const { addBudget } = useAddBudget();
   const { transactions, transactionTotal } = useGetTransactions();
+  const { budget } = useGetBudget();
   const { name, profilePhoto, userID } = useGetUserInfo();
   const navigate = useNavigate();
 
@@ -24,10 +28,42 @@ export const ExpenseTracker = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [notification, setNotification] = useState("");
+  const [editBudget, setEditBudget] = useState(false);
+  const [budgetAmount, setBudgetAmount] = useState(0);
   const { balance, income, expenses } = transactionTotal;
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
+  const showNotification = (message) => {
+    setNotification(message);
+    setTimeout(() => {
+      setNotification("");
+    }, 3000);
+  };
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      if (budget - expenses < 0) {
+        showNotification(
+          "Warning: You have exceeded your budget. Please consider reducing your expenses."
+        );
+      } else if (budget - expenses === 0) {
+        showNotification(
+          "You have reached your budget. Consider reducing your expenses to save more."
+        );
+      } else if (budget - expenses < 100) {
+        showNotification(
+          "You are close to reaching your budget. Consider reducing your expenses to save more."
+        );
+      }
+    } else {
+      setIsInitialLoad(false); // Set this to false after the first run
+    }
+  }, [budget, expenses]);
+
+  // Logic to filter transactions based on startDate and endDate
   const applyDateFilter = () => {
-    // Logic to filter transactions based on startDate and endDate
+    setFilteredTransactions([]);
     const startDateArray = startDate.split("-").map(Number);
     const endDateArray = endDate.split("-").map(Number);
     transactions.forEach((transaction) => {
@@ -74,7 +110,7 @@ export const ExpenseTracker = () => {
       transactionAmount,
       transactionType,
     });
-
+    showNotification("Transaction successful");
     setDescription("");
     setTransactionAmount("");
   };
@@ -129,6 +165,39 @@ export const ExpenseTracker = () => {
                 <h4>Income</h4>
                 <p>${income}</p>
               </div>
+              <div className="budget">
+                <h4>Budget</h4>
+                {editBudget ? (
+                  <input
+                    type="text"
+                    placeholder="Budget"
+                    className="budget-input"
+                    value={budgetAmount}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (/^\d*\.?\d{0,2}$/.test(value)) {
+                        setBudgetAmount(value);
+                      }
+                    }}
+                  ></input>
+                ) : (
+                  <p>${budget}</p>
+                )}
+                <button
+                  className="edit-budget-button"
+                  onClick={() => {
+                    if (editBudget) {
+                      // Save changes when exiting edit mode
+                      setBudgetAmount(budgetAmount);
+                      addBudget({ budgetAmount });
+                    }
+                    // Toggle edit mode
+                    setEditBudget(!editBudget);
+                  }}
+                >
+                  {editBudget ? "Save Changes" : "Edit Budget"}
+                </button>
+              </div>
               <div className="expenses">
                 <h4>Expenses</h4>
                 <p>${expenses}</p>
@@ -173,6 +242,9 @@ export const ExpenseTracker = () => {
                   onChange={(e) => setTransactionType(e.target.value)}
                 />
               </div>
+              {notification && (
+                <h3 className="transaction-notification">{notification}</h3>
+              )}
               <button type="submit" className="submit-button">
                 Add Transaction
               </button>
