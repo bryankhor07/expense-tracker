@@ -5,6 +5,7 @@
   height: 100vh;
   background: linear-gradient(135deg, #f0f4ff, #d9e9ff);
   font-family: "Arial", sans-serif;
+  background-image: url("./ExpenseTrackerLoginBackground.jpg");
 }
 
 .login-container {
@@ -59,4 +60,5 @@ h1 {
   background-color: black;
   width: 1.2rem;
   height: 1.2rem;
+  border-radius: 50%;
 }

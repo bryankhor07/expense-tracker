@@ -31,8 +31,8 @@ export const Auth = () => {
         <h1>Welcome!</h1>
         <p className="login-text">Sign in with Google to continue</p>
         <button className="login-button" onClick={signInWithGoogle}>
-          <img src={GoogleIcon} alt="Google Icon" className="google-icon" />{" "}
-          Sign In With Google
+          Sign In With Google{" "}
+          <img src={GoogleIcon} alt="Google Icon" className="google-icon" />
         </button>
       </div>
     </div>
